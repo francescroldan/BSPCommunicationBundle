@@ -1,0 +1,43 @@
+parameters:
+    # Email immeditely Communication Handler
+    bsp.communication.email_immediately_communication_type_handler.class: BSP\CommunicationBundle\Handler\EmailImmediatelyCommunicationTypeHandler
+   
+    # Listener Class
+    bsp.communication.listener.communication.class: BSP\CommunicationBundle\Listener\CommunicationListener
+    
+    # Communication Manipulator
+    bsp.communication.manipulator.class: BSP\CommunicationBundle\Manipulator\CommunicationManipulator
+
+    # Communication type Provider
+    bsp.communication.communication_type_sender_provider.class: BSP\CommunicationBundle\Provider\CommunicationTypeSenderProvider
+
+services:
+    # Email immeditely Communication Handler
+    bsp.communication.communication_type_handler.email_immediately:
+        class: %bsp.communication.email_immediately_communication_type_handler.class%
+        calls:
+            - [ setMailer, [@mailer] ]
+            #- [ setTemplating, [@templating] ]
+        tags:
+            - { name: bsp.communication.communication_type_handler }
+
+    # Listeners
+    bsp.communication.listener.communication:
+        class: %bsp.communication.listener.communication.class%
+        arguments: [ @bsp.communication.communication_manager]
+        calls:
+            - [ setCommunicationTypeSenderProvider, [@bsp.communication.communication_type_sender_provider] ]
+        tags:
+            - { name: kernel.event_listener, event: bsp.communication.communication_created, method: onSendCommunication }
+
+    # Communication Manipulator
+    bsp.communication.manipulator:
+        class: %bsp.communication.manipulator.class%
+        arguments:
+            - @bsp.communication.communication_manager
+            - @event_dispatcher
+            
+    # Communication type Provider
+    bsp.communication.communication_type_sender_provider:
+        class: %bsp.communication.communication_type_sender_provider.class%
+

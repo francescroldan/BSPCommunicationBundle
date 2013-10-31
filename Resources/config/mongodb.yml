@@ -1,0 +1,16 @@
+parameters:
+    # Communication Manager
+    bsp.communication.communication.class: BSP\CommunicationBundle\Document\Communication
+    bsp.communication.communication_type.class: BSP\CommunicationBundle\Document\CommunicationType
+    bsp.communication.communication_manager.class: BSP\CommunicationBundle\Document\CommunicationManager
+
+services:
+    # Communication Manager
+    bsp.communication.communication_manager:
+        class: %bsp.communication.communication_manager.class%
+        arguments:
+            - @doctrine.odm.mongodb.document_manager
+            - %bsp.communication.communication.class%
+            - %bsp.communication.communication_type.class%
+        calls:
+            - [ setEventDispatcher, [@event_dispatcher] ]
