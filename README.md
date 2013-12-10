@@ -5,13 +5,70 @@ This bundle allows to centralize the communications with your users.
 
 ## Installation
 
+Installation is a 3 step process:
+
+1. Download BSPCommunicationBundle using composer
+2. Enable the Bundle
+3. Configure the bundle
+
+### Step 1: Download BSPCommunicationBundle using composer
+
+``` js
+{
+	"repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/francescroldan/BSPCommunicationBundle"
+        }
+    ],
+    "require": {
+        "francescroldan/bsp-communication-bundle": "v1.0.*"
+    }
+}
+```
+
+Now tell composer to download the bundle by running the command:
+
+``` bash
+$ php composer.phar update francescroldan/bsp-communication-bundle
+```
+
+Composer will install the bundle to your project's `vendor/francescroldan/bsp-communication-bundle` directory.
+
+### Step 2: Enable the bundle
+
+Enable the bundle in the kernel:
+
+``` php
+// app/AppKernel.php
+
+public function registerBundles()
+{
+    $bundles = array(
+        // ...
+        new BSP\CommunicationBundle\BSPCommunicationBundle(),
+    );
+}
+```
+### Step 3: Configure the bundle
+
+Add the following lines to your config.yml
+
+``` yaml
+# app/config/config.yml
+
+bsp_communication:
+    db_driver: mongodb # Currently only works with mongodb, we are working on orm
+```
+
+And you are done!
 
 ## Basic Usage
 
 This bundle abstracts you from mailer's services, calling simply to his manipulator:
 
 ``` php
-$manipulator = $this->get('bsp.communication.manipulator');
+$communicationManipulator = $this->get('bsp.communication.manipulator');
 
 $email_from = "from@email.com";
 $user = $this->getUser();
