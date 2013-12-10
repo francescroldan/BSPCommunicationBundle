@@ -17,7 +17,7 @@ class CommunicationManipulator
         $this->dispatcher = $dispatcher;
     }
 
-    public function createCommunication( $from, Communicable $to, Array $types, $message, $related = null )
+    public function createCommunication( $from, Communicable $to, Array $types, $message, $contentType = 'text/plain', $related = null )
     {
         $communication = $this->communicationManager->createCommunication();
         $communication->setFrom($from);
@@ -30,6 +30,7 @@ class CommunicationManipulator
         }
 
         $communication->setMessage($message);
+        $communication->setContentType($contentType);
         
         if ($related != null) 
         {

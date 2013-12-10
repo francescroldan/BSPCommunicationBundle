@@ -60,6 +60,11 @@ class Communication extends BaseCommunication
      */
     protected $message;
 
+    /**
+     * @MongoDB\String
+     */
+    protected $contentType;
+
 
 
     public function __construct()
@@ -236,6 +241,29 @@ class Communication extends BaseCommunication
     public function setMessage($message)
     {
         $this->message = $message;
+        return $this;
+    }
+    
+    /**
+     * Getter for contentType
+     *
+     * @return mixed
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+    
+    /**
+     * Setter for contentType
+     *
+     * @param mixed $contentType Value to set
+     *
+     * @return self
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
         return $this;
     }
     

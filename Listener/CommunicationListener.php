@@ -46,7 +46,7 @@ class CommunicationListener
 
         foreach ($communication->getTypes() as $type) 
         {
-            $resultSended = $this->communicationTypeSenderProvider->send($type->getType(), $communication->getArrayData());
+            $resultSended = $this->communicationTypeSenderProvider->send($type->getType(), $communication->serialize());
             $type->setStatus($this->communicationTypeSenderProvider->changeStatus($type->getType(), array('result' => $resultSended)));
         }
 

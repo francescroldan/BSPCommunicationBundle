@@ -17,6 +17,7 @@ class Communication implements CommunicationInterface
     protected $from;
     protected $to;
     protected $message;
+    protected $contentType;
 
     public function __construct()
     {
@@ -132,7 +133,31 @@ class Communication implements CommunicationInterface
         return $this;
     }
 
-    public function getArrayData()
+    /**
+     * Getter for contentType
+     *
+     * @return mixed
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+    
+    /**
+     * Setter for contentType
+     *
+     * @param mixed $contentType Value to set
+     *
+     * @return self
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+        return $this;
+    }
+    
+
+    public function serialize()
     {
         return array(
                 'id' => $this->id,
@@ -144,6 +169,7 @@ class Communication implements CommunicationInterface
                 'from' => $this->from,
                 'to' => $this->to,
                 'message' => $this->message,
+                'contentType' => $this->contentType,
             );
     }
 }
