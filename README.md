@@ -156,6 +156,16 @@ services:
           - { template: { confirmation: %fos_user.registration.confirmation.template%, resetting: %fos_user.resetting.email.template% }, from_email: { confirmation: %fos_user.registration.confirmation.from_email%, resetting: %fos_user.resetting.email.from_email% } }
 ```
 
+add to your User class:
+
+``` php
+
+use BSP\CommunicationBundle\Model\Communicable;
+
+class User extends BaseUser implements Communicable
+
+```
+
 and add to your FOSUserBundle configuration:
 
 ``` yml
