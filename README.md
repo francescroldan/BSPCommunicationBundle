@@ -22,7 +22,7 @@ Installation is a 3 step process:
         }
     ],
     "require": {
-        "francescroldan/bsp-communication-bundle": "v1.0.*"
+        "francescroldan/bsp-communication-bundle": "0.1.*"
     }
 }
 ```
