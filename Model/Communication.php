@@ -11,11 +11,10 @@ class Communication implements CommunicationInterface
     protected $id;
     protected $related;
     protected $types;
-    protected $status;
     protected $createdAt;
     protected $updatedAt;
-    protected $from;
     protected $to;
+    protected $title;
     protected $message;
     protected $contentType;
 
@@ -64,15 +63,12 @@ class Communication implements CommunicationInterface
         return $this;
     }
 
-    public function getStatus()
+    public function incrementCreatedAt()
     {
-        return $this->status;
-    }
-
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
+        if (null === $this->createdAt) {
+            $this->createdAt = new \DateTime();
+        }
+        $this->updatedAt = new \DateTime();
     }
 
     public function setCreatedAt()
@@ -89,6 +85,11 @@ class Communication implements CommunicationInterface
         return $this->createdAt;
     }
 
+    public function incrementUpdatedAt()
+    {
+        $this->updatedAt = new \DateTime();
+    }    
+
     public function getUpdatedAt()
     {
         return $this->updatedAt;
@@ -97,17 +98,6 @@ class Communication implements CommunicationInterface
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
-        return $this;
-    }
-
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    public function setFrom($from)
-    {
-        $this->from = $from;
         return $this;
     }
 
@@ -122,6 +112,29 @@ class Communication implements CommunicationInterface
         return $this;
     }
 
+    /**
+     * Getter for title
+     *
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    /**
+     * Setter for title
+     *
+     * @param mixed $title Value to set
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+    
     public function getMessage()
     {
         return $this->message;
@@ -163,11 +176,10 @@ class Communication implements CommunicationInterface
                 'id' => $this->id,
                 'related' => $this->related,
                 'types' => $this->types,
-                'status' => $this->status,
                 'createdAt' => $this->createdAt,
                 'updatedAt' => $this->updatedAt,
-                'from' => $this->from,
                 'to' => $this->to,
+                'title' => $this->title,
                 'message' => $this->message,
                 'contentType' => $this->contentType,
             );

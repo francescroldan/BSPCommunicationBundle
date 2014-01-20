@@ -2,14 +2,10 @@
 
 namespace BSP\CommunicationBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -30,6 +26,31 @@ class Configuration implements ConfigurationInterface
             ->end()
         ->end();
 
+        $this->addFromDataSection( $rootNode );
+
         return $treeBuilder;
+    }
+
+    /**
+     * Add Configuration Captcha
+     *
+     * @param ArrayNodeDefinition $rootNode
+     */
+    private function addFromDataSection( ArrayNodeDefinition $node )
+    {
+        $node
+            ->children()
+                ->arrayNode('from_data')
+                    ->children()
+                        ->scalarNode('email')
+                        ->validate()
+                            ->ifTrue(function ($v) { return ! preg_match("/([\w\-]+\@[\w\-]+\.[\w\-]+)/", $v);})
+                            ->thenInvalid('"%s" is an invalid email account')
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()
+        ;
     }
 }

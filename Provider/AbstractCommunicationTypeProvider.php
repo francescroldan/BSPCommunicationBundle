@@ -12,15 +12,19 @@ abstract class AbstractCommunicationTypeProvider implements CommunicationTypePro
     public function addCommunicationTypeHandler(CommunicationTypeHandlerInterface $handler)
     {
         $type = $handler->getType();
-        if (isset($this->handlers[$type])) {
+
+        if (isset($this->handlers[$type])) 
+        {
             throw new \Exception("CommunicationType Handler '$type' duplicated");
         }
+        
         $this->handlers[$type] = $handler;
     }
 
     protected function getCommunicationTypeHandler($type)
     {
-        if (!isset($this->handlers[$type])) {
+        if ( ! isset($this->handlers[$type])) 
+        {
             throw new \Exception("CommunicationType Handler '$type' does not exists");
         }
 
@@ -29,7 +33,8 @@ abstract class AbstractCommunicationTypeProvider implements CommunicationTypePro
 
     public function listCommunicationTypeHandlers()
     {
-        if (isset($this->handlers)) {
+        if (isset($this->handlers)) 
+        {
             return array_keys($this->handlers);
         }
 

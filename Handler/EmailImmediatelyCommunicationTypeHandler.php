@@ -14,12 +14,18 @@ class EmailImmediatelyCommunicationTypeHandler extends AbstractCommunicationType
     /**
     *	Final statuses
     */
-    const COMMUNICATION_STATUS_EMAIL_SEND           = 900;
-    const COMMUNICATION_STATUS_EMAIL_REFUSED        = 950;
+    const COMMUNICATION_STATUS_EMAIL_SEND           = 901;
+    const COMMUNICATION_STATUS_EMAIL_REFUSED        = 902;
 	
 	protected $mailer;
 	protected $templating;
 
+    /**
+    *   Send an email immediately
+    *
+    *   @param array $options The options array shall contain the keys 'message', 'to' and 'from'.
+    *
+    */
     public function send( array $options = null )
     {
         if ($options === null) 
@@ -27,34 +33,29 @@ class EmailImmediatelyCommunicationTypeHandler extends AbstractCommunicationType
             throw new \Exception( 'You must specify the data required for sending email' );
         }
 
-        //die(var_export(array_keys($options), 1));
         if ($options['message'] === null || $options['message'] == '' ) 
         {
             throw new \Exception( 'You need to specify the email message' );
         }
 
-        /*if ($options['from'] === null || $options['from'] == '' ) {
+        if ($options['from'] === null || $options['from'] == '' ) {
             throw new \Exception( 'You need to specify the email from field' );
-        }*/
+        }
 
         if ($options['to'] === null || $options['to'] == '' ) 
         {
             throw new \Exception( 'You need to specify the email to field' );
         }
 
-        $renderedLines = explode("\n", trim($options['message']));
-        $subject = $renderedLines[0];
-        $body = implode("\n", array_slice($renderedLines, 1));
-
 		$message = \Swift_Message::newInstance()
-		    ->setSubject($subject)
+		    ->setSubject($options['title'])
             ->setFrom($options['from'])
-		    ->setTo($options['to']->getEmail())
-		    ->setBody($body)
+		    ->setTo($options['to']->get('email'))
+		    ->setBody($options['message'])
             ->setContentType($options['contentType'])
 		;
-
-    	return $this->mailer->send($message);    	
+        die(var_export($options['to']->get('email'), 1));
+    	return array('result' => $this->mailer->send($message));    	
     }
 
     public function changeStatus( array $options = null )
