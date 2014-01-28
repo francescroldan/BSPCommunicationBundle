@@ -19,7 +19,11 @@ class CommunicationManipulator
         $this->dispatcher = $dispatcher;
     }
 
+<<<<<<< HEAD
     public function createCommunication(Communicable $to, Array $types, $title, $message, $contentType = 'text/plain', $related = null )
+=======
+    public function createCommunication( $from, Communicable $to, Array $types, $message, $contentType = 'text/plain', $related = null )
+>>>>>>> 5ff7cae904008094bb14fb0fb92526e53c036209
     {
         $communication = $this->communicationManager->createCommunication();
                
@@ -28,6 +32,7 @@ class CommunicationManipulator
             $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_CREATED,  new CreateCommunicationEvent($communication, $to, $types, $title, $message, $contentType, $related) );
         }
 
+<<<<<<< HEAD
         return $communication;
     }
 
@@ -36,6 +41,12 @@ class CommunicationManipulator
         $communication = $this->_getCommunication($communication);
 
         if (null != $this->dispatcher) 
+=======
+        $communication->setMessage($message);
+        $communication->setContentType($contentType);
+        
+        if ($related != null) 
+>>>>>>> 5ff7cae904008094bb14fb0fb92526e53c036209
         {
             $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_SENDED,  new SendCommunicationEvent($communication, $types) );
         }

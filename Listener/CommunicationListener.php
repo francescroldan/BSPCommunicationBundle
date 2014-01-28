@@ -158,4 +158,15 @@ class CommunicationListener
         return $this;
     }
 
+<<<<<<< HEAD
+=======
+        foreach ($communication->getTypes() as $type) 
+        {
+            $resultSended = $this->communicationTypeSenderProvider->send($type->getType(), $communication->serialize());
+            $type->setStatus($this->communicationTypeSenderProvider->changeStatus($type->getType(), array('result' => $resultSended)));
+        }
+
+        $this->communicationManager->updateCommunication($communication);
+    }
+>>>>>>> 5ff7cae904008094bb14fb0fb92526e53c036209
 }

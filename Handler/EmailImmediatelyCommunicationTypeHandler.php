@@ -47,11 +47,22 @@ class EmailImmediatelyCommunicationTypeHandler extends AbstractCommunicationType
             throw new \Exception( 'You need to specify the email to field' );
         }
 
+        $renderedLines = explode("\n", trim($options['message']));
+        $subject = $renderedLines[0];
+        $body = implode("\n", array_slice($renderedLines, 1));
+
 		$message = \Swift_Message::newInstance()
+<<<<<<< HEAD
 		    ->setSubject($options['title'])
             ->setFrom($options['from'])
 		    ->setTo($options['to']->get('email'))
 		    ->setBody($options['message'])
+=======
+		    ->setSubject($subject)
+            ->setFrom($options['from'])
+		    ->setTo($options['to']->getEmail())
+		    ->setBody($body)
+>>>>>>> 5ff7cae904008094bb14fb0fb92526e53c036209
             ->setContentType($options['contentType'])
 		;
         die(var_export($options['to']->get('email'), 1));

@@ -55,7 +55,17 @@ class Communication extends BaseCommunication
     /**
      * @MongoDB\String
      */
+<<<<<<< HEAD
     protected $contentType;
+=======
+    protected $message;
+
+    /**
+     * @MongoDB\String
+     */
+    protected $contentType;
+
+>>>>>>> 5ff7cae904008094bb14fb0fb92526e53c036209
 
     /** @MongoDB\PrePersist */
     public function prePersistCart()
