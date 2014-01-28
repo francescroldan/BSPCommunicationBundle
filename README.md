@@ -73,13 +73,43 @@ $communicationManipulator = $this->get('bsp.communication.manipulator');
 $email_from = "from@email.com";
 $user = $this->getUser();
 
+$subject = "Some subject text";
 $message = $this->templating->render('AcmeTestBundle:Email:testEmail.html.twig');
 
-$this->communicationManipulator->createCommunication($email_from, $user(), array('email_immediately'), $message, 'text/html' );
+$this->communicationManipulator->createCommunication($user, array(array('email_immediately', $email_from)), $subject, $message, 'text/html' );
 
 ```
-Note that `email_from` is an email address and `$user` is an instance of `BSP\CommunicationBundle\Model\Communicable` interface.
 
+Note that `$user` is an instance of `BSP\CommunicationBundle\Model\Communicable` interface, and manipulator's second parameter is an array of all sending's types you would to use like this:
+
+``` php
+array(
+	array('email_immediately', $email_from),
+	array('sms', $telephone_sms_from), // not implemented yet
+	array('wassap', $telephone_wassap_from), // not implemented yet
+)
+
+```
+
+When communication is created, a new register is added on "communications" table/collection. You can use that to implement a delayed email sender service cron or a simply as a log.
+
+## Custom communication type sender
+
+
+The bundle includes, currently, only the sending type "email immediately", to add your own communicaion type sender just make a handler that extends `BSP\CommunicationBundle\Handler\AbstractCommunicationTypeHandler`, like `BSP\CommunicationBundle\Handler\EmailImmediatelyCommunicationTypeHandler`.
+
+Don't forget to register it as a service:
+
+``` yml
+# BSP/CommunicationBundle/Resources/config/services.yml
+    bsp.communication.communication_type_handler.custom_communication_type:
+        class: %bsp.communication.custom_communication_type_handler.class%
+        calls:
+            - [ setNeededService, [@service] ]
+        tags:
+            - { name: bsp.communication.communication_type_handler }
+
+```
 
 ## Integrating with FOSUserBundle
 
@@ -103,7 +133,7 @@ class AcmeMailer implements MailerInterface
     protected $templating;
     protected $parameters;
 
-    public function __construct(CommunicationManipulator $communicationManipulator, UrlGeneratorInterface $router, EngineInterface $templating, array $parameters)
+    public function __construct(CommunicationManipulator $communicationManipulator, UrlGeneratorInterface $router, \Twig_Environment $templating, array $parameters)
     {
         $this->communicationManipulator = $communicationManipulator;
         $this->router = $router;
@@ -115,26 +145,56 @@ class AcmeMailer implements MailerInterface
     {
         $template = $this->parameters['template']['confirmation'];
         $url = $this->router->generate('fos_user_registration_confirm', array('token' => $user->getConfirmationToken()), true);
-
-        $message = $this->templating->render($template, array(
+        $context = array(
             'user' => $user,
-            'confirmationUrl' =>  $url
-        ));
+            'confirmationUrl' => $url
+        );
 
-        $this->communicationManipulator->createCommunication($this->parameters['from_email']['confirmation'], $user, array('email_immediately'), $message, 'text/html' );
+        $this->sendMessage($template, $context, $this->parameters['from_email']['confirmation'], $user);
     }
 
     public function sendResettingEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['template']['resetting'];
         $url = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
-
-        $message = $this->templating->render($template, array(
+        $context = array(
             'user' => $user,
-            'confirmationUrl' =>  $url
-        ));
+            'confirmationUrl' => $url
+        );
+        $this->sendMessage($template, $context, $this->parameters['from_email']['resetting'], $user);
+    }
 
-        $this->communicationManipulator->createCommunication($this->parameters['from_email']['resetting'], $user, array('email_immediately'), $message, 'text/html' );
+    /**
+     * @param string $templateName
+     * @param array  $context
+     * @param string $fromEmail
+     * @param string $toEmail
+     */
+    protected function sendMessage($templateName, $context, $fromEmail, $to)
+    {
+        $template = $this->templating->loadTemplate($templateName);
+        $subject = $template->renderBlock('subject', $context);
+        $textBody = $template->renderBlock('body_text', $context);
+        $htmlBody = $template->renderBlock('body_html', $context);
+
+        if ( ! empty($htmlBody)) 
+        {
+            $message = $htmlBody;
+        } 
+        else 
+        {
+            $message = $textBody;
+        }
+
+        $message = $message;
+        $this->communicationManipulator->createCommunication(   $to, 
+                                                                array(
+                                                                    array('email_immediately', key($fromEmail))
+                                                                ), 
+                                                                $subject,
+                                                                $message, 
+                                                                'text/html' );
+ 
     }
 }
 
