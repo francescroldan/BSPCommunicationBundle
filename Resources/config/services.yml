@@ -1,10 +1,10 @@
 parameters:
     # Email immeditely Communication Handler
     bsp.communication.email_immediately_communication_type_handler.class: BSP\CommunicationBundle\Handler\EmailImmediatelyCommunicationTypeHandler
-   
+
     # Listener Class
     bsp.communication.listener.communication.class: BSP\CommunicationBundle\Listener\CommunicationListener
-    
+
     # Communication Manipulator
     bsp.communication.manipulator.class: BSP\CommunicationBundle\Manipulator\CommunicationManipulator
 
@@ -36,7 +36,7 @@ services:
         arguments:
             - @bsp.communication.communication_manager
             - @event_dispatcher
-            
+
     # Communication type Provider
     bsp.communication.communication_type_sender_provider:
         class: %bsp.communication.communication_type_sender_provider.class%
