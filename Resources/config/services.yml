@@ -17,18 +17,20 @@ services:
         class: %bsp.communication.email_immediately_communication_type_handler.class%
         calls:
             - [ setMailer, [@mailer] ]
-            #- [ setTemplating, [@templating] ]
         tags:
             - { name: bsp.communication.communication_type_handler }
 
     # Listeners
     bsp.communication.listener.communication:
         class: %bsp.communication.listener.communication.class%
-        arguments: [ @bsp.communication.communication_manager]
         calls:
+            - [ setCommunicationManipulator, [@bsp.communication.manipulator] ]
+            - [ setCommunicationManager, [@bsp.communication.communication_manager] ]
             - [ setCommunicationTypeSenderProvider, [@bsp.communication.communication_type_sender_provider] ]
         tags:
-            - { name: kernel.event_listener, event: bsp.communication.communication_created, method: onSendCommunication }
+            - { name: kernel.event_listener, event: bsp.communication.communication_created, method: onCreateCommunication }
+            - { name: kernel.event_listener, event: bsp.communication.communication_sended, method: onSendCommunication }
+            - { name: kernel.event_listener, event: bsp.communication.communication_status_changed, method: onChangeStatusCommunication }
 
     # Communication Manipulator
     bsp.communication.manipulator:

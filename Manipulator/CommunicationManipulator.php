@@ -4,7 +4,9 @@ namespace BSP\CommunicationBundle\Manipulator;
 
 use BSP\CommunicationBundle\Event\CommunicationEvents;
 use BSP\CommunicationBundle\Model\Communicable;
-use BSP\CommunicationBundle\Event\CommunicationEvent;
+use BSP\CommunicationBundle\Event\CreateCommunicationEvent;
+use BSP\CommunicationBundle\Event\SendCommunicationEvent;
+use BSP\CommunicationBundle\Event\ChangeStatusCommunicationEvent;
 
 class CommunicationManipulator
 {
@@ -17,51 +19,54 @@ class CommunicationManipulator
         $this->dispatcher = $dispatcher;
     }
 
-    public function createCommunication( $from, Communicable $to, Array $types, $message, $contentType = 'text/plain', $related = null )
+    public function createCommunication(Communicable $to, Array $types, $title, $message, $contentType = 'text/plain', $related = null )
     {
         $communication = $this->communicationManager->createCommunication();
-        $communication->setFrom($from);
-        $communication->setTo($to);
-        
-        $typeClass   = $this->communicationManager->getCommUnicationTypeClass();
-        foreach ($types as $type) 
-        {
-            $communication->addType(new $typeClass($type));
-        }
-
-        $communication->setMessage($message);
-        $communication->setContentType($contentType);
-        
-        if ($related != null) 
-        {
-            $communication->setRelated($related);
-        }
-        
-        $this->communicationManager->updateCommunication( $communication );
-        
+               
         if (null != $this->dispatcher) 
         {
-            $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_CREATED,  new CommunicationEvent($communication) );
+            $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_CREATED,  new CreateCommunicationEvent($communication, $to, $types, $title, $message, $contentType, $related) );
         }
 
         return $communication;
     }
 
-    public function sendCommunication( $communication, $date = null )
+    public function sendCommunication( $communication, $types = null )
     {
         $communication = $this->_getCommunication($communication);
-        $date = ( $date == null)? new \DateTime() : $date;
-        $communication->setDate( $date );
-        $this->communicationManager->updateCommunication( $communication );
+
+        if (null != $this->dispatcher) 
+        {
+            $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_SENDED,  new SendCommunicationEvent($communication, $types) );
+        }
+        else
+        {
+            throw new \Exception( 'The event dispatcher is not enabled.' );
+        }
+        
+        return $communication;
+    }
+    
+    public function changeStatusCommunication( $communication, $typeName, $options )
+    {
+        $communication = $this->_getCommunication($communication);
+
+        if (null != $this->dispatcher) 
+        {
+            $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_STATUS_CHANGED,  new ChangeStatusCommunicationEvent($communication, $typeName, $options ) );
+        }
         
         return $communication;
     }
     
     protected function _getCommunication( $communication )
     {
-        if ( is_string($communication) ) {
-            $ncommunication = $this->communicationManager->findCommunicationtById( $communication );
-            if (! $ncommunication) {
+        if ( is_string($communication) ) 
+        {
+            $ncommunication = $this->communicationManager->findCommunicationById( $communication );
+            
+            if (! $ncommunication) 
+            {
                 throw new \Exception( 'Communication ' . $communication . ' not found' );
             }
 

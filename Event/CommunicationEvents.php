@@ -15,5 +15,6 @@ final class CommunicationEvents
      */
     const COMMUNICATION_CREATED = 'bsp.communication.communication_created';
     const COMMUNICATION_SENDED = 'bsp.communication.communication_sended';
+    const COMMUNICATION_STATUS_CHANGED = 'bsp.communication.communication_status_changed';
 
 }

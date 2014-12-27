@@ -8,7 +8,8 @@ interface CommunicationTypeInterface
     /**
     *   Communication types
     */
-    /*const COMMUNICATION_TYPE_INTERNAL               = 100;
+    /*
+    const COMMUNICATION_TYPE_INTERNAL               = 100;
     const COMMUNICATION_TYPE_EMAIL                  = 200;
         const COMMUNICATION_TYPE_EMAIL_IMMEDIATE    = 201;
         const COMMUNICATION_TYPE_EMAIL_QUEUED       = 210;
@@ -22,7 +23,8 @@ interface CommunicationTypeInterface
     /**
     *   Communication statuses
     */
-    /*const COMMUNICATION_STATUS_CREATED              = 000;
+    /*
+    const COMMUNICATION_STATUS_CREATED              = 000;
 
     const COMMUNICATION_STATUS_INTERNAL_PENDING     = 100;
     const COMMUNICATION_STATUS_INTERNAL_SEND        = 230;
@@ -34,8 +36,12 @@ interface CommunicationTypeInterface
 
     const COMMUNICATION_STATUS_FINISHED             = 900;
     */
+    public function getFrom();
+    public function setFrom($from);
     public function getType();
     public function setType($type);
     public function getStatus();
     public function setStatus($status);
+    public function getUpdatedAt();
+    public function setUpdatedAt($updatedAt);
 }

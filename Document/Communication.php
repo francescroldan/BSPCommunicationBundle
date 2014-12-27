@@ -28,11 +28,6 @@ class Communication extends BaseCommunication
     protected $types;
 
     /**
-     * @MongoDB\String
-     */
-    protected $status;
-
-    /**
      * @MongoDB\Date
      */
     protected $createdAt;
@@ -41,19 +36,16 @@ class Communication extends BaseCommunication
      * @MongoDB\Date
      */
     protected $updatedAt;
-    
+
     /**
-     * MongoDB\ReferenceOne(targetDocument="QDDS\UserBundle\Document\User", inversedBy="communicationSend")
+     * @MongoDB\EmbedOne(targetDocument="BSP\CommunicationBundle\Document\CommunicationData")
      */
+    protected $to;
+
     /**
      * @MongoDB\String
      */
-    protected $from;
-
-    /**
-     * @MongoDB\ReferenceOne(targetDocument="QDDS\UserBundle\Document\User", inversedBy="communicationReceived")
-     */
-    protected $to;
+    protected $title;
 
     /**
      * @MongoDB\String
@@ -66,11 +58,18 @@ class Communication extends BaseCommunication
     protected $contentType;
 
 
-
-    public function __construct()
+    /** @MongoDB\PrePersist */
+    public function prePersistCart()
     {
+        $this->incrementCreatedAt();
     }
 
+    /** @MongoDB\PreUpdate */
+    public function preUpdateCart()
+    {
+        $this->incrementUpdatedAt();
+    }
+    
     /**
      * Getter for id
      *
@@ -150,29 +149,6 @@ class Communication extends BaseCommunication
     }
 
     /**
-     * Getter for status
-     *
-     * @return mixed
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-    
-    /**
-     * Setter for status
-     *
-     * @param mixed $status Value to set
-     *
-     * @return self
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
-    }
-    
-    /**
      * Getter for createdAt
      *
      * @return mixed
@@ -221,6 +197,29 @@ class Communication extends BaseCommunication
         return $this;
     }
     
+    /**
+     * Getter for title
+     *
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    /**
+     * Setter for title
+     *
+     * @param mixed $title Value to set
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+        return $this;
+    }
+
     /**
      * Getter for message
      *

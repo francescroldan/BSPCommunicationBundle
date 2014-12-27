@@ -15,6 +15,11 @@ class CommunicationType extends BaseCommunicationType
     /**
      * @MongoDB\String
      */
+    protected $from;
+
+    /**
+     * @MongoDB\String
+     */
     protected $type;
 
     /**
@@ -22,6 +27,45 @@ class CommunicationType extends BaseCommunicationType
      */
     protected $status;
 
+    /**
+     * @MongoDB\Date
+     */
+    protected $updatedAt;
+
+    /** @MongoDB\PrePersist */
+    public function prePersistCart()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /** @MongoDB\PreUpdate */
+    public function preUpdateCart()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Getter for from
+     *
+     * @return mixed
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
+    
+    /**
+     * Setter for from
+     *
+     * @param mixed $from Value to set
+     *
+     * @return self
+     */
+    public function setFrom($from)
+    {
+        $this->from = $from;
+        return $this;
+    }
     
     /**
      * Getter for type
