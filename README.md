@@ -65,7 +65,7 @@ And you are done!
 
 ## Basic Usage
 
-This bundle abstracts you from mailer's services, calling simply to his manipulator:
+This bundle abstracts you from any kind of communicaion services, calling simply to his manipulator:
 
 ``` php
 $communicationManipulator = $this->get('bsp.communication.manipulator');
@@ -76,7 +76,11 @@ $user = $this->getUser();
 $subject = "Some subject text";
 $message = $this->templating->render('AcmeTestBundle:Email:testEmail.html.twig');
 
-$this->communicationManipulator->createCommunication($user, array(array('email_immediately', $email_from)), $subject, $message, 'text/html' );
+$this->communicationManipulator->createCommunication(	$user, 
+							array(array('email_immediately', 
+							array('from' => $email_from, 'text/plain' => $message))), 
+							$subject, 
+							$message);
 
 ```
 
@@ -84,7 +88,7 @@ Note that `$user` is an instance of `BSP\CommunicationBundle\Model\Communicable`
 
 ``` php
 array(
-	array('email_immediately', $email_from),
+	array('email_immediately', array('from' => $email_from, 'text/plain' => $text_body, 'text/html' => $html_body)),
 	array('sms', $telephone_sms_from), // not implemented yet
 	array('wassap', $telephone_wassap_from), // not implemented yet
 )
@@ -101,11 +105,11 @@ The bundle includes, currently, only the sending type "email immediately", to ad
 Don't forget to register it as a service:
 
 ``` yml
-# BSP/CommunicationBundle/Resources/config/services.yml
-    bsp.communication.communication_type_handler.custom_communication_type:
-        class: %bsp.communication.custom_communication_type_handler.class%
+# src/ACME/YourCommunicationBundle/Resources/config/services.yml
+    acme.your_communication.communication_type_handler.custom_communication_type:
+        class: %acme.your_communication.custom_communication_type_handler.class%
         calls:
-            - [ setNeededService, [@service] ]
+            - [ setRequiredService, [@required_service] ]
         tags:
             - { name: bsp.communication.communication_type_handler }
 
@@ -186,14 +190,10 @@ class AcmeMailer implements MailerInterface
             $message = $textBody;
         }
 
-        $message = $message;
         $this->communicationManipulator->createCommunication(   $to, 
-                                                                array(
-                                                                    array('email_immediately', key($fromEmail))
-                                                                ), 
+                                                                array(array('email_immediately', array('from' => key($fromEmail), 'text/plain' => $textBody, 'text/html' => $htmlBody))), 
                                                                 $subject,
-                                                                $message, 
-                                                                'text/html' );
+                                                                $message);
  
     }
 }
@@ -212,7 +212,7 @@ services:
       arguments:
           - @bsp.communication.manipulator
           - @router
-          - @templating
+          - @twig
           - { template: { confirmation: %fos_user.registration.confirmation.template%, resetting: %fos_user.resetting.email.template% }, from_email: { confirmation: %fos_user.registration.confirmation.from_email%, resetting: %fos_user.resetting.email.from_email% } }
 ```
 
