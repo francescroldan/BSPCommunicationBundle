@@ -22,7 +22,5 @@ interface CommunicationInterface
     public function setTitle($title);
     public function getMessage();
     public function setMessage($message);
-    public function getContentType();
-    public function setContentType($contentType);
     public function serialize();
 }

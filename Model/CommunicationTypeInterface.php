@@ -36,8 +36,6 @@ interface CommunicationTypeInterface
 
     const COMMUNICATION_STATUS_FINISHED             = 900;
     */
-    public function getFrom();
-    public function setFrom($from);
     public function getType();
     public function setType($type);
     public function getStatus();

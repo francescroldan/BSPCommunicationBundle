@@ -23,7 +23,6 @@ class CommunicationListener
         $types = $event->getTypes();
         $title = $event->getTitle();
         $message = $event->getMessage();
-        $contentType = $event->getContentType();
         $related = $event->getRelated();
         
         $communication->setTo(new CommunicationData($to));
@@ -36,7 +35,6 @@ class CommunicationListener
 
         $communication->setTitle($title);
         $communication->setMessage($message);
-        $communication->setContentType($contentType);
         
         if ($related != null) 
         {

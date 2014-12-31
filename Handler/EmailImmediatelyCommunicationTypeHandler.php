@@ -21,9 +21,10 @@ class EmailImmediatelyCommunicationTypeHandler extends AbstractCommunicationType
 	protected $templating;
 
     /**
-    *   Send an email immediately
+    *   Send an email immediately with swiftmailer
     *
-    *   @param array $options The options array shall contain the keys 'message', 'to' and 'from'.
+    *   @param array $options The options array shall contain the keys 'message', 'to' and 'parameters', 
+    *                         this is, also, an array with the key 'from' and probably 'text/plain' and/or 'text/html'.
     *
     */
     public function send( array $options = null )
@@ -38,7 +39,7 @@ class EmailImmediatelyCommunicationTypeHandler extends AbstractCommunicationType
             throw new \Exception( 'You need to specify the email message' );
         }
 
-        if ($options['from'] === null || $options['from'] == '' ) {
+        if ($options['parameters']['from'] === null || $options['parameters']['from'] == '' ) {
             throw new \Exception( 'You need to specify the email from field' );
         }
 
@@ -49,11 +50,31 @@ class EmailImmediatelyCommunicationTypeHandler extends AbstractCommunicationType
 
 		$message = \Swift_Message::newInstance()
 		    ->setSubject($options['title'])
-            ->setFrom($options['from'])
+            ->setFrom($options['parameters']['from'])
 		    ->setTo($options['to']->get('email'))
-		    ->setBody($options['message'])
-            ->setContentType($options['contentType'])
-		;
+        ;
+
+        if ( ! empty($options['parameters']['text/plain'])) 
+        {
+            //If the key 'text/plain' is defined, create the body with this content type
+            $message->setBody($options['parameters']['text/plain'], 'text/plain');
+
+            if ( ! empty($options['parameters']['text/html'])) 
+            {
+                //If the key 'text/html' is defined, also, create a body part with this content type
+                $message->addPart($options['parameters']['text/html'], 'text/html');
+            }
+        }
+        elseif ( ! empty($options['parameters']['text/html'])) 
+        {
+            //If the key 'text/html' is defined, create the body with this content type
+            $message->setBody($options['parameters']['text/html'], 'text/html');
+        }
+        else
+        {
+            //If the content type is undefined, create the body with the message option and the 'text/plain' content type 
+            $message->setBody($options['message'], 'text/plain');
+        }
 
     	return array('result' => $this->mailer->send($message));    	
     }

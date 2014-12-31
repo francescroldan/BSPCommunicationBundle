@@ -13,9 +13,9 @@ use BSP\CommunicationBundle\Model\CommunicationType as BaseCommunicationType;
 class CommunicationType extends BaseCommunicationType
 {
     /**
-     * @MongoDB\String
+     * @MongoDB\Collection
      */
-    protected $from;
+    protected $parameters;
 
     /**
      * @MongoDB\String
@@ -45,25 +45,25 @@ class CommunicationType extends BaseCommunicationType
     }
 
     /**
-     * Getter for from
+     * Getter for parameters
      *
      * @return mixed
      */
-    public function getFrom()
+    public function getParameters()
     {
-        return $this->from;
+        return $this->parameters;
     }
     
     /**
-     * Setter for from
+     * Setter for parameters
      *
-     * @param mixed $from Value to set
+     * @param mixed $parameters Value to set
      *
      * @return self
      */
-    public function setFrom($from)
+    public function setParameters($parameters)
     {
-        $this->from = $from;
+        $this->parameters = $parameters;
         return $this;
     }
     

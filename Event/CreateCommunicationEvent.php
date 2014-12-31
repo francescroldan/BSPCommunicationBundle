@@ -11,17 +11,15 @@ class CreateCommunicationEvent extends Event
     protected $types;
     protected $title;
     protected $message;
-    protected $contentType;
     protected $related;
 
-    public function __construct(CommunicationInterface $communication, $to, $types, $title, $message, $contentType, $related )
+    public function __construct(CommunicationInterface $communication, $to, $types, $title, $message, $related )
     {
         $this->communication = $communication;
         $this->to = $to;
         $this->types = $types;
         $this->title = $title;
         $this->message = $message;
-        $this->contentType = $contentType;
         $this->related = $related;
     }
 
@@ -50,10 +48,6 @@ class CreateCommunicationEvent extends Event
         return $this->message;
     }
 
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
 
     public function getRelated()
     {

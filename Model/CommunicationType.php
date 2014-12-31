@@ -7,7 +7,7 @@ use BSP\CommunicationBundle\Handler\AbstractCommunicationTypeHandler;
 
 class CommunicationType implements CommunicationTypeInterface
 {
-    protected $from;
+    protected $parameters;
     protected $type;
     protected $status;
     protected $updatedAt;
@@ -16,18 +16,18 @@ class CommunicationType implements CommunicationTypeInterface
     public function __construct(array $type, $status = AbstractCommunicationTypeHandler::COMMUNICATION_STATUS_CREATED)
     {
         $this->type = $type[0];
-        $this->from = $type[1];
+        $this->parameters = $type[1];
         $this->status = $status;
     }
 
-    public function getFrom()
+    public function getParameters()
     {
-        return $this->from;
+        return $this->parameters;
     }
 
-    public function setFrom($from)
+    public function setParameters($parameters)
     {
-        $this->from = $from;
+        $this->parameters = $parameters;
     }
 
     public function getType()
@@ -77,7 +77,7 @@ class CommunicationType implements CommunicationTypeInterface
     {
         return array(
             'type' => $this->type,
-            'from' => $this->from,
+            'parameters' => $this->parameters,
             'status' => $this->status,
             );
     }

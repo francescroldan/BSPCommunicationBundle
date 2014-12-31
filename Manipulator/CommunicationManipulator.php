@@ -19,13 +19,13 @@ class CommunicationManipulator
         $this->dispatcher = $dispatcher;
     }
 
-    public function createCommunication(Communicable $to, Array $types, $title, $message, $contentType = 'text/plain', $related = null )
+    public function createCommunication(Communicable $to, Array $types, $title, $message, $related = null )
     {
         $communication = $this->communicationManager->createCommunication();
                
         if (null != $this->dispatcher) 
         {
-            $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_CREATED,  new CreateCommunicationEvent($communication, $to, $types, $title, $message, $contentType, $related) );
+            $this->dispatcher->dispatch( CommunicationEvents::COMMUNICATION_CREATED,  new CreateCommunicationEvent($communication, $to, $types, $title, $message, $related) );
         }
 
         return $communication;
