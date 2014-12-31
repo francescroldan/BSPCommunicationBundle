@@ -77,8 +77,7 @@ $subject = "Some subject text";
 $message = $this->templating->render('AcmeTestBundle:Email:testEmail.html.twig');
 
 $this->communicationManipulator->createCommunication(	$user, 
-							array(array('email_immediately', 
-							array('from' => $email_from, 'text/plain' => $message))), 
+							array(array('email_immediately', array('from' => $email_from, 'text/plain' => $message))), 
 							$subject, 
 							$message);
 
