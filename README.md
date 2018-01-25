@@ -77,7 +77,9 @@ $subject = "Some subject text";
 $message = $this->templating->render('AcmeTestBundle:Email:testEmail.html.twig');
 
 $this->communicationManipulator->createCommunication(	$user, 
-							array(array('email_immediately', array('from' => $email_from, 'text/plain' => $message))), 
+							[
+								['email_immediately', array('from' => $email_from, 'text/plain' => $message)],
+							], 
 							$subject, 
 							$message);
 
@@ -86,11 +88,11 @@ $this->communicationManipulator->createCommunication(	$user,
 Note that `$user` is an instance of `BSP\CommunicationBundle\Model\Communicable` interface, and manipulator's second parameter is an array of all sending's types you would to use like this:
 
 ``` php
-array(
-	array('email_immediately', array('from' => $email_from, 'text/plain' => $text_body, 'text/html' => $html_body)),
-	array('sms', $telephone_sms_from), // not implemented yet
-	array('wassap', $telephone_wassap_from), // not implemented yet
-)
+[
+	['email_immediately', array('from' => $email_from, 'text/plain' => $text_body, 'text/html' => $html_body)],
+	['sms', $telephone_sms_from], // not implemented yet
+	['wassap', $telephone_wassap_from], // not implemented yet
+]
 
 ```
 
